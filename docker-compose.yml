@@ -1,0 +1,52 @@
+version: '3.7'
+
+networks:
+  leetcode:
+  app-shared:
+    driver: bridge
+
+services:
+  nginx:
+    container_name: leetcode-nginx
+    restart: always
+    tty: true
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    volumes:
+      - ./code:/var/www/html/
+    ports:
+      - "8005:80"
+    networks:
+      - leetcode
+      - app-shared
+  php:
+    container_name: leetcode-php
+    restart: always
+    tty: true
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./code:/var/www/html/
+    depends_on:
+      - nginx
+    ports:
+      - "9005:9000"
+    networks:
+      - leetcode
+      - app-shared
+#  python:
+#    container_name: leetcode-python
+#    restart: always
+#    tty: true
+#    build:
+#      context: .
+#      dockerfile: ./docker/python/Dockerfile
+#    volumes:
+#      - ./code:/var/www/html
+#    ports:
+#      - "5005:5000"
+#    networks:
+#      - leetcode
+#      - app-shared
