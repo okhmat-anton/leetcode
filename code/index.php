@@ -1,8 +1,7 @@
 <?php
 
-$f = scandir(__DIR__);
-foreach ($f as $file) {
-    if (preg_match('/\.(php)/', $file) && $file!='index.php') {
-        echo '<a href="'.$file .'" target="_blank" />'.str_replace('.php','',$file).'</a><br />';
-    }
+// all directories in  the current directory
+$dirs = array_filter(glob('*'), 'is_dir');
+foreach ($dirs as $dir){
+    echo '<a href="'.$dir.'">'.$dir.'</a><br />';
 }
