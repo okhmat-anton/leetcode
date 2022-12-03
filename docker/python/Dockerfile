@@ -1,16 +1,29 @@
-FROM python:3.9-slim
+FROM python:3.7.3-alpine3.9
 
-# Настроить и активировать виртуальную среду
-ENV VIRTUAL_ENV "/venv"
-RUN python -m venv $VIRTUAL_ENV
-ENV PATH "$VIRTUAL_ENV/bin:$PATH"
+# Install python dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Команды Python будут выполнены в виртуальной среде
-#RUN python -m pip install
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Set working directory
-WORKDIR /var/www/html/python
+# Set work directory
+WORKDIR /usr/src/app
 
+# Copy project
 COPY . .
 
-#CMD [ "python3", "-m" , "run", "--host=0.0.0.0"]
+# Install code dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+
+# Run server
+CMD ["python", "manage.py", "runserver"]
+
+# Path: docker/nginx/Dockerfile
