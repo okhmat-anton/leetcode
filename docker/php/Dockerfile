@@ -22,3 +22,6 @@ WORKDIR /var/www/html
 
 # Copy code to /var/www/html
 COPY . .
+
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 755 /var/www/html
